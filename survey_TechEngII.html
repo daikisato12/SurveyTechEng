@@ -1,0 +1,1742 @@
+<title>受講希望調査 / Course Preference Survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+
+<style>
+/* ─── Design tokens ────────────────────────────────────── */
+:root {
+  --bg:          #EBF0F7;
+  --surface:     #FFFFFF;
+  --surface-alt: #F3F6FB;
+  --primary:     #1A4B82;
+  --primary-lt:  #E6EEF8;
+  --primary-hov: #123868;
+  --accent:      #1E8C5A;
+  --text:        #1A2636;
+  --text-2:      #516070;
+  --text-3:      #8BA3B8;
+  --border:      #D2DCEA;
+  --focus:       #1A4B82;
+  --avail:       #1E8C5A;
+  --unavail:     #B0BCC9;
+  --danger:      #C0392B;
+  --shadow:      0 2px 8px rgba(20,50,100,.10);
+  --shadow-md:   0 6px 20px rgba(20,50,100,.13);
+  --r:           12px;
+  --r-sm:        7px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #0D1B2E;
+    --surface:     #162336;
+    --surface-alt: #1C2D42;
+    --primary:     #4A90D9;
+    --primary-lt:  #1A2E48;
+    --primary-hov: #5EA4E8;
+    --accent:      #35C97A;
+    --text:        #DDE8F5;
+    --text-2:      #8FAEC7;
+    --text-3:      #4E6A85;
+    --border:      #233349;
+    --focus:       #4A90D9;
+    --avail:       #35C97A;
+    --unavail:     #3A4E62;
+    --danger:      #E86B60;
+    --shadow:      0 2px 8px rgba(0,0,0,.35);
+    --shadow-md:   0 6px 20px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:          #0D1B2E;
+  --surface:     #162336;
+  --surface-alt: #1C2D42;
+  --primary:     #4A90D9;
+  --primary-lt:  #1A2E48;
+  --primary-hov: #5EA4E8;
+  --accent:      #35C97A;
+  --text:        #DDE8F5;
+  --text-2:      #8FAEC7;
+  --text-3:      #4E6A85;
+  --border:      #233349;
+  --focus:       #4A90D9;
+  --avail:       #35C97A;
+  --unavail:     #3A4E62;
+  --danger:      #E86B60;
+  --shadow:      0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:   0 6px 20px rgba(0,0,0,.45);
+}
+
+/* ─── Reset & base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  min-height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+input, select, button, textarea { font-family: inherit; font-size: inherit; }
+button { cursor: pointer; border: none; background: none; }
+[hidden] { display: none !important; }
+
+/* ─── Header ────────────────────────────────────────────── */
+.site-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+}
+.site-header .logo-mark {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.18);
+  border-radius: 8px;
+  display: grid; place-items: center;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .02em;
+  flex-shrink: 0;
+}
+.site-header .title-group { flex: 1; }
+.course-label {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  opacity: .6;
+  margin-bottom: 1px;
+}
+.site-header h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.site-header h1 .h1-en {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: .78;
+  letter-spacing: .02em;
+}
+.site-header .subtitle {
+  font-size: 11px;
+  opacity: .72;
+  letter-spacing: .03em;
+  line-height: 1.5;
+}
+.step-pill {
+  background: rgba(255,255,255,.18);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Step 1 ─────────────────────────────────────────────── */
+#step1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px 64px;
+}
+.form-card {
+  background: var(--surface);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 40px 36px;
+}
+.form-card .card-icon {
+  width: 52px; height: 52px;
+  background: var(--primary-lt);
+  border-radius: 14px;
+  display: grid; place-items: center;
+  margin-bottom: 20px;
+}
+.form-card .card-icon svg { width: 26px; height: 26px; }
+.form-card h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-wrap: balance;
+}
+.form-card .card-desc {
+  color: var(--text-2);
+  font-size: 13px;
+  margin-bottom: 28px;
+  line-height: 1.75;
+}
+.field { margin-bottom: 20px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--text-2);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.field label .req {
+  color: var(--danger);
+  margin-left: 3px;
+}
+.field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-alt);
+  color: var(--text);
+  outline: none;
+  transition: border-color .18s;
+}
+.field input:focus { border-color: var(--focus); background: var(--surface); }
+.field input.err { border-color: var(--danger); }
+.field-error {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+}
+.field-error.show { display: block; }
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--r-sm);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  transition: background .18s, transform .1s;
+  margin-top: 8px;
+}
+.btn-primary:hover { background: var(--primary-hov); }
+.btn-primary:active { transform: scale(.98); }
+.btn-primary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.info-note {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: var(--surface-alt);
+  border-radius: var(--r-sm);
+  border-left: 3px solid var(--primary);
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+/* ─── Step 2 layout ──────────────────────────────────────── */
+#step2 {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 56px);
+  overflow: hidden;
+}
+
+.s2-toolbar {
+  padding: 12px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.student-tag {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.student-tag strong { color: var(--text); }
+.s2-hint {
+  font-size: 12px;
+  color: var(--text-3);
+  flex: 1;
+  text-align: right;
+}
+@media (max-width: 600px) {
+  .s2-hint { display: none; }
+}
+
+.s2-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  overflow: hidden;
+}
+@media (max-width: 700px) {
+  #step2 { height: auto; overflow: visible; }
+  .s2-body { grid-template-columns: 1fr; height: auto; }
+}
+
+/* ─── Pool panel (left) ──────────────────────────────────── */
+.pool-panel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--bg);
+}
+.panel-head {
+  padding: 14px 16px 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.panel-head h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.search-box {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-alt);
+  color: var(--text);
+  outline: none;
+  font-size: 13px;
+  margin-bottom: 10px;
+  transition: border-color .18s;
+}
+.search-box:focus { border-color: var(--focus); }
+
+.realm-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.rf-btn {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1.5px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-2);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.rf-btn:hover { border-color: var(--primary); color: var(--primary); }
+.rf-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.pool-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px 20px;
+}
+.realm-group { margin-bottom: 4px; }
+.realm-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 10px 4px 6px;
+}
+
+.pool-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  margin-bottom: 5px;
+  cursor: grab;
+  transition: border-color .15s, box-shadow .15s, opacity .15s;
+  user-select: none;
+  touch-action: none;
+}
+.pool-item:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+.pool-item:active { cursor: grabbing; }
+.pool-item.ranked {
+  opacity: .45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.pool-item .drag-hint {
+  color: var(--text-3);
+  font-size: 14px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.pool-item .item-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+}
+.realm-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 500;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.avail-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.avail-dot.yes { background: var(--avail); }
+.avail-dot.no  { background: var(--unavail); }
+.pool-item .added-badge {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ─── Rank panel (right) ─────────────────────────────────── */
+.rank-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+.rank-head {
+  padding: 14px 16px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rank-head h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px;
+  font-weight: 700;
+  flex: 1;
+}
+.count-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--primary-lt);
+  color: var(--primary);
+}
+.count-badge.full {
+  background: var(--accent);
+  color: #fff;
+}
+
+.rank-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px 20px;
+}
+.rank-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-3);
+  gap: 10px;
+}
+.rank-empty svg { opacity: .4; }
+.rank-empty p { font-size: 13px; line-height: 1.75; }
+
+.rank-list {
+  min-height: 60px;
+}
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  margin-bottom: 5px;
+  transition: border-color .15s, box-shadow .15s;
+  user-select: none;
+}
+.rank-item:hover { border-color: var(--border); box-shadow: var(--shadow); }
+.rank-item .rank-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.rank-item .rank-num.tier1 { background: #D55E00; } /* 1-5:  バーミリオン(赤橙) — Okabe-Ito */
+.rank-item .rank-num.tier2 { background: #E69F00; } /* 6-10: オレンジ — Okabe-Ito */
+.rank-item .rank-num.tier3 { background: #56B4E9; } /* 11-15: スカイブルー — Okabe-Ito */
+.rank-item .rank-num.tier4 { background: #0072B2; } /* 16-20: ブルー — Okabe-Ito */
+.rank-item .drag-handle {
+  color: var(--text-3);
+  cursor: grab;
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px;
+}
+.rank-item .drag-handle:active { cursor: grabbing; }
+.rank-item .item-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+}
+.rank-item .remove-btn {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--surface-alt);
+  color: var(--text-3);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.rank-item .remove-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}
+.rank-item.unavail-item { opacity: .72; }
+
+/* Sortable ghost */
+.sortable-ghost { opacity: .35; border: 1.5px dashed var(--primary) !important; }
+.sortable-drag { box-shadow: var(--shadow-md) !important; }
+
+/* ─── Submit bar ─────────────────────────────────────────── */
+.submit-bar {
+  padding: 12px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.submit-info {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.btn-submit {
+  padding: 10px 28px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  transition: background .18s, transform .1s;
+}
+.btn-submit:hover { background: #18795A; }
+.btn-submit:active { transform: scale(.97); }
+.btn-submit:disabled { background: var(--unavail); cursor: not-allowed; transform: none; }
+.btn-submit:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ─── Step 3 (Avoid) ───────────────────────────────────── */
+.btn-back-step {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 6px; padding: 5px 12px;
+  font-size: 13px; color: var(--text-sub); cursor: pointer;
+  transition: background .15s;
+}
+.btn-back-step:hover { background: var(--bg-card); }
+.step3-header {
+  padding: 20px 24px 4px;
+}
+.step3-header h2 { font-size: 1.15rem; margin: 0 0 10px; }
+.avoid-warning {
+  background: #FFF7ED;
+  border-left: 4px solid #D55E00;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 12px 16px;
+  font-size: .88rem;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .avoid-warning { background: #2a1a00; }
+}
+:root[data-theme="dark"] .avoid-warning { background: #2a1a00; }
+#avoid-pool {
+  padding: 16px 24px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.avoid-realm-group {}
+.avoid-realm-label {
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--text-sub);
+  padding: 0 0 6px; border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.avoid-items {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.avoid-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px; cursor: pointer;
+  font-size: .87rem; font-weight: 500;
+  border: 2px solid transparent;
+  transition: all .15s;
+  user-select: none;
+}
+.avoid-chip:hover { filter: brightness(.93); }
+.avoid-chip.selected {
+  border-color: #D55E00;
+  box-shadow: 0 0 0 2px rgba(213,94,0,.25);
+}
+.avoid-chip.selected::before {
+  content: '✕';
+  font-size: .8rem;
+  color: #D55E00;
+  font-weight: 700;
+}
+.avoid-count-note {
+  font-size: .82rem; color: var(--text-sub);
+  padding: 0 24px 8px;
+}
+
+/* ─── Submitting overlay ────────────────────────────────── */
+.submitting-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300;
+}
+.submitting-box {
+  background: var(--surface);
+  border-radius: var(--r);
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; border-top-color: var(--primary); }
+}
+.submitting-box p { font-size: 14px; color: var(--text-2); }
+
+/* ─── GAS URL banner ─────────────────────────────────────── */
+.gas-banner {
+  background: #FEF3C7;
+  border-bottom: 2px solid #F59E0B;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: #92400E;
+  display: flex; align-items: center; gap: 10px;
+}
+.gas-banner code {
+  background: rgba(0,0,0,.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* ─── Confirmation modal ─────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+.modal {
+  background: var(--surface);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 540px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-head {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-head h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.modal-head p { font-size: 13px; color: var(--text-2); }
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+}
+.confirm-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+.confirm-info .ci-label { color: var(--text-3); font-weight: 700; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; padding-top: 3px; }
+.confirm-info .ci-val { color: var(--text); }
+.confirm-list-head {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.confirm-list { list-style: none; }
+.confirm-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.confirm-list li:last-child { border-bottom: none; }
+.confirm-list .cnum {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+.confirm-list .cnum.tier1 { background: #D55E00; }
+.confirm-list .cnum.tier2 { background: #E69F00; }
+.confirm-list .cnum.tier3 { background: #56B4E9; }
+.confirm-list .cnum.tier4 { background: #0072B2; }
+.confirm-list .cname { flex: 1; font-weight: 500; }
+.confirm-list .crealm { font-size: 11px; color: var(--text-3); }
+.modal-foot {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.btn-cancel {
+  padding: 9px 20px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--border);
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--surface);
+  transition: border-color .15s, color .15s;
+}
+.btn-cancel:hover { border-color: var(--text-2); color: var(--text); }
+.btn-confirm {
+  padding: 9px 24px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background .18s;
+}
+.btn-confirm:hover { background: #18795A; }
+.btn-confirm:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ─── Success screen ─────────────────────────────────────── */
+#success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - 56px);
+  padding: 40px 16px;
+  text-align: center;
+}
+.success-icon {
+  width: 72px; height: 72px;
+  background: var(--primary-lt);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  margin-bottom: 24px;
+}
+.success-icon svg { width: 36px; height: 36px; }
+#success h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+#success p { color: var(--text-2); font-size: 14px; max-width: 420px; line-height: 1.8; }
+#success .result-card {
+  margin-top: 28px;
+  background: var(--surface);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 480px;
+  text-align: left;
+}
+#success .result-card h3 {
+  font-size: 13px; font-weight: 700; color: var(--text-2);
+  letter-spacing: .05em; text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* ─── Bilingual English sub-text ────────────────────────── */
+.bi-en {
+  display: block;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: .78em;
+  font-weight: 400;
+  opacity: .68;
+  letter-spacing: .02em;
+  margin-top: 1px;
+}
+label .bi-en {
+  display: inline;
+  font-size: .85em;
+  margin-top: 0;
+  margin-left: 4px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .form-card { padding: 28px 22px 24px; }
+  .pool-panel, .rank-panel { max-height: 60vh; }
+}
+@media (max-width: 480px) {
+  .s2-toolbar { padding: 10px 14px; gap: 8px; flex-wrap: wrap; }
+  .pool-scroll, .rank-scroll { padding: 8px 10px 16px; }
+}
+</style>
+
+<!-- ═════════════════════ HEADER ════════════════════════════ -->
+<header class="site-header">
+  <div class="logo-mark">筑波</div>
+  <div class="title-group">
+    <div class="course-label">専門語学BII / Technical English II</div>
+    <h1>受講希望調査<span class="h1-en">/ Course Preference Survey</span></h1>
+    <div class="subtitle">筑波大学 生物学類 · University of Tsukuba, College of Biological Sciences</div>
+  </div>
+  <div class="step-pill" id="step-pill">Step 1 / 2</div>
+</header>
+
+<!-- ═════════════════════ STEP 1 ════════════════════════════ -->
+<section id="step1">
+  <div class="form-card">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <h2>学生情報の入力<span class="bi-en">Student Information</span></h2>
+    <p class="card-desc">氏名と大学メールアドレスを入力してください。学籍番号はメールアドレスから自動取得されます。<br>次のステップで受講を希望する教員の順位をご登録いただきます。<br><span class="bi-en" style="display:inline;margin-left:0;font-size:.92em;">Please enter your name and university email. Your student ID will be derived automatically from your email address. You will rank your preferred instructors in the next step.</span></p>
+
+    <div class="field">
+      <label for="f-name">氏名<span class="bi-en">Name</span><span class="req">*</span></label>
+      <input type="text" id="f-name" placeholder="例：筑波 太郎 / e.g. Tsukuba Taro" autocomplete="name">
+      <div class="field-error" id="err-name">氏名を入力してください / Please enter your name</div>
+    </div>
+    <div class="field">
+      <label for="f-email">大学メールアドレス<span class="bi-en">University Email</span><span class="req">*</span></label>
+      <input type="email" id="f-email" placeholder="xxxx@u.tsukuba.ac.jp" autocomplete="email">
+      <div class="field-error" id="err-email">@u.tsukuba.ac.jp のメールアドレスを入力してください / Please use your @u.tsukuba.ac.jp email</div>
+    </div>
+
+    <button class="btn-primary" id="btn-next" onclick="proceedToStep2()">
+      次へ — 教員希望順位の入力 → <span class="bi-en" style="display:inline;margin-left:6px;font-size:.82em;">Next: Instructor Ranking →</span>
+    </button>
+
+    <div class="info-note">
+      入力したメールアドレスは本調査の集計にのみ使用されます。
+      次のステップでは <strong>ちょうど20名</strong> の教員を希望順に選択してください。<br>
+      <span class="bi-en" style="display:inline;margin-left:0;font-size:.95em;">Your email will be used solely for survey aggregation. In the next step, please rank exactly <strong>20</strong> instructors in order of preference.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════ STEP 2 ════════════════════════════ -->
+<section id="step2" hidden>
+  <!-- Toolbar -->
+  <div class="s2-toolbar">
+    <div class="student-tag" id="student-tag"></div>
+    <div class="s2-hint">← 左リストから教員をドラッグ or クリックして右へ追加 · 右列でドラッグして並び替え <span class="bi-en" style="display:inline;margin-left:4px;">/ Drag or click from left to add · Drag right column to reorder</span></div>
+  </div>
+
+  <!-- Body -->
+  <div class="s2-body">
+    <!-- Pool (left) -->
+    <div class="pool-panel">
+      <div class="panel-head">
+        <h3>候補教員リスト <span class="bi-en" style="display:inline;margin-left:0;font-size:.8em;">/ Instructor List</span> <span style="font-weight:400;font-size:12px;color:var(--text-3)" id="pool-count-label"></span></h3>
+        <input type="search" class="search-box" id="pool-search" placeholder="教員名で検索… / Search by name…" oninput="onSearch(this.value)">
+        <div class="realm-filters" id="realm-filters"></div>
+      </div>
+      <div class="pool-scroll" id="pool-scroll">
+        <div id="pool-content"></div>
+      </div>
+    </div>
+
+    <!-- Rank (right) -->
+    <div class="rank-panel">
+      <div class="rank-head">
+        <h3>希望順位（20名）<span class="bi-en" style="display:inline;margin-left:0;font-size:.78em;">/ Preference Ranking (20 required)</span></h3>
+        <div class="count-badge" id="count-badge">0 / 20</div>
+      </div>
+      <div class="rank-scroll">
+        <div class="rank-empty" id="rank-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+          </svg>
+          <p>左の候補リストから教員を<br>ドラッグまたはクリックして追加<br><span class="bi-en" style="display:inline;margin-left:0;">Drag or click instructors from the left list to add them</span></p>
+        </div>
+        <div class="rank-list" id="rank-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit bar -->
+  <div class="submit-bar">
+    <div class="submit-info" id="submit-info">教員を選択してください（20名必須）/ Please select 20 instructors (required)</div>
+    <button class="btn-submit" id="btn-submit" onclick="proceedToStep3()" disabled>次へ — 避けたい教員の選択 → <span class="bi-en" style="display:inline;margin-left:4px;font-size:.82em;">Next: Avoid Preferences →</span></button>
+  </div>
+</section>
+
+<!-- ═════════════════════ STEP 3 ════════════════════════════ -->
+<section id="step3" hidden>
+  <div class="s2-toolbar">
+    <div class="student-tag" id="student-tag3"></div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+      <button class="btn-back-step" onclick="backToStep2()">← 戻る / Back</button>
+      <span id="avoid-badge" class="count-badge">0</span>
+    </div>
+  </div>
+
+  <div class="step3-header">
+    <h2>避けたい教員の選択<span class="bi-en">Instructors to Avoid</span></h2>
+    <div class="avoid-warning">
+      <p>どうしても受講を避けたい教員がいればチェックしてください（複数選択可）。<br>
+      選択した教員数が多いと、調整の結果受講できなくなる場合があります。その場合、来年度以降に履修することになり、結果として卒業が遅れることもあるので注意してください。</p>
+      <p style="margin-top:8px;font-size:.85em;color:var(--text-sub);">Check hesitations if you have. Checking too many may result in no available instructors being assigned, which would require you to take the course in a later academic year and may delay your graduation.</p>
+    </div>
+  </div>
+
+  <div id="avoid-pool"></div>
+
+  <div class="submit-bar">
+    <div class="submit-info" id="avoid-info">選択しない場合はそのまま「確認画面へ」を押してください。/ If none, proceed to the confirmation screen.</div>
+    <button class="btn-submit" onclick="openConfirm()">確認画面へ / Review & Submit</button>
+  </div>
+</section>
+
+<!-- ═════════════════════ SUBMITTING ════════════════════════ -->
+<div class="submitting-overlay" id="submitting-overlay" hidden>
+  <div class="submitting-box">
+    <div class="spinner"></div>
+    <p>送信中です。しばらくお待ちください… <span class="bi-en" style="display:inline;">/ Submitting. Please wait…</span></p>
+  </div>
+</div>
+
+<!-- ═════════════════════ CONFIRM MODAL ══════════════════════ -->
+<div class="overlay" id="confirm-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h2 id="modal-title">内容を確認してください<span class="bi-en">Please Confirm Your Submission</span></h2>
+      <p>提出後の修正はできません。内容をご確認の上、「提出する」を押してください。<br><span class="bi-en" style="display:inline;margin-left:0;">Changes cannot be made after submission. Please review and press "Submit".</span></p>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeConfirm()">戻って修正 / Go Back</button>
+      <button class="btn-confirm" onclick="submitSurvey()">提出する / Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SUCCESS ════════════════════════════ -->
+<section id="success" hidden>
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+  </div>
+  <h2>提出が完了しました<span class="bi-en">Submission Complete</span></h2>
+  <p>ご回答ありがとうございました。<br>希望調査の集計後、改めてご連絡いたします。<br><span class="bi-en" style="display:inline;margin-left:0;">Thank you for your response. We will contact you again after tallying the survey results.</span></p>
+  <div class="result-card">
+    <h3>提出内容 / Submitted Preferences</h3>
+    <div id="success-body"></div>
+  </div>
+</section>
+
+<script>
+/* ─── GAS 設定 ────────────────────────────────────────── */
+// Google Apps Script をデプロイして取得した URL を貼り付けてください
+// 例: 'https://script.google.com/macros/s/AKfyc.../exec'
+const GAS_URL = 'https://prod-63.japaneast.logic.azure.com:443/workflows/27f7e77c3cba40719703292dd50c6a2e/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=RT_bpuL1x4NCmS36mAPE0BIk62AKhUkYXTuZviLmCms';   // ← Azure Logic Apps の HTTP トリガー URL
+
+/* ─── Realm English names ─────────────────────────────── */
+const REALM_EN = {
+  '英語のみで実施':            'English-Only Sessions',
+  '系統分類・進化学':          'Phylogenetics & Evolutionary Biology',
+  '生態学':                    'Ecology',
+  '植物発生・生理学':          'Plant Development & Physiology',
+  '動物発生・生理学グループ1': 'Animal Development & Physiology, Gr. 1',
+  '動物発生・生理学グループ2': 'Animal Development & Physiology, Gr. 2',
+  '分子細胞生物学':            'Molecular & Cell Biology',
+  'ゲノム情報学':              'Genomics & Bioinformatics',
+  '応用生物化学・農林学':      'Applied Biochemistry & Agricultural Sciences',
+};
+
+/* ─── Data ────────────────────────────────────────────── */
+const INSTRUCTORS = [
+  {id:1, realm:"英語のみで実施", name:"Irving, Louis"},
+  {id:2, realm:"英語のみで実施", name:"VOGT Kaspar Manuel"},
+  {id:3, realm:"英語のみで実施", name:"Kowit, Hengphasatporn"},
+  {id:4, realm:"英語のみで実施", name:"Casco-Robles, Martin"},
+  {id:5, realm:"英語のみで実施", name:"Harvey, Benjamin"},
+  {id:6, realm:"英語のみで実施", name:"Wanyi, Lee"},
+  {id:7, realm:"系統分類・進化学", name:"出川　洋介"},
+  {id:8, realm:"系統分類・進化学", name:"石田　健一郎"},
+  {id:9, realm:"系統分類・進化学", name:"中山　剛"},
+  {id:10, realm:"系統分類・進化学", name:"白鳥　峻志"},
+  {id:11, realm:"系統分類・進化学", name:"和田　洋"},
+  {id:12, realm:"系統分類・進化学", name:"中野　裕昭"},
+  {id:13, realm:"系統分類・進化学", name:"八畑　謙介"},
+  {id:14, realm:"系統分類・進化学", name:"竹中　將起"},
+  {id:15, realm:"系統分類・進化学", name:"守野　孔明"},
+  {id:16, realm:"系統分類・進化学", name:"露木　葵唯"},
+  {id:17, realm:"系統分類・進化学", name:"藤田　麻里"},
+  {id:18, realm:"生態学", name:"廣田　充"},
+  {id:19, realm:"生態学", name:"大橋　一晴"},
+  {id:20, realm:"生態学", name:"大森　裕子"},
+  {id:21, realm:"生態学", name:"増本　翔太"},
+  {id:22, realm:"生態学", name:"徳永　幸彦"},
+  {id:23, realm:"生態学", name:"佐藤　幸恵"},
+  {id:24, realm:"生態学", name:"横井　智之"},
+  {id:25, realm:"植物発生・生理学", name:"菊池　彰"},
+  {id:26, realm:"植物発生・生理学", name:"壽崎　拓哉"},
+  {id:27, realm:"植物発生・生理学", name:"三浦　謙治"},
+  {id:28, realm:"植物発生・生理学", name:"小口　太一"},
+  {id:29, realm:"植物発生・生理学", name:"前田　義昌"},
+  {id:30, realm:"植物発生・生理学", name:"蓑田　歩"},
+  {id:31, realm:"動物発生・生理学グループ2", name:"笹倉　靖徳"},
+  {id:32, realm:"動物発生・生理学グループ1", name:"丹羽　隆介"},
+  {id:33, realm:"動物発生・生理学グループ1", name:"石川　由希"},
+  {id:34, realm:"動物発生・生理学グループ1", name:"島田　裕子"},
+  {id:35, realm:"動物発生・生理学グループ2", name:"谷口　俊介"},
+  {id:36, realm:"動物発生・生理学グループ1", name:"上山 拓己"},
+  {id:37, realm:"動物発生・生理学グループ1", name:"佐奈喜　祐哉"},
+  {id:38, realm:"動物発生・生理学グループ1", name:"春本　敏之"},
+  {id:39, realm:"動物発生・生理学グループ2", name:"千葉　親文"},
+  {id:40, realm:"動物発生・生理学グループ2", name:"櫻井　啓輔"},
+  {id:41, realm:"動物発生・生理学グループ2", name:"鈴木　大地"},
+  {id:42, realm:"動物発生・生理学グループ2", name:"志賀　翔太"},
+  {id:43, realm:"分子細胞生物学", name:"谷　一寿"},
+  {id:44, realm:"分子細胞生物学", name:"野﨑　翔平"},
+  {id:45, realm:"分子細胞生物学", name:"平川　泰久"},
+  {id:46, realm:"分子細胞生物学", name:"稲葉　一男"},
+  {id:47, realm:"分子細胞生物学", name:"千葉　智樹"},
+  {id:48, realm:"分子細胞生物学", name:"中田　和人"},
+  {id:49, realm:"分子細胞生物学", name:"中野　賢太郎"},
+  {id:50, realm:"分子細胞生物学", name:"石川　香"},
+  {id:51, realm:"分子細胞生物学", name:"鶴田　文憲"},
+  {id:52, realm:"分子細胞生物学", name:"濱　祐太郎"},
+  {id:53, realm:"ゲノム情報学", name:"稲垣　祐司"},
+  {id:54, realm:"ゲノム情報学", name:"桑山　秀一"},
+  {id:55, realm:"ゲノム情報学", name:"重信　秀治"},
+  {id:56, realm:"ゲノム情報学", name:"澤村　京一"},
+  {id:57, realm:"ゲノム情報学", name:"豊福　雅典"},
+  {id:58, realm:"ゲノム情報学", name:"原田　隆平"},
+  {id:59, realm:"ゲノム情報学", name:"伊藤　希"},
+  {id:60, realm:"系統分類・進化学", name:"中山　卓郎"},
+  {id:61, realm:"ゲノム情報学", name:"鈴木　重勝"},
+  {id:62, realm:"ゲノム情報学", name:"徳納　吉秀"},
+  {id:63, realm:"ゲノム情報学", name:"賴本　隼汰"},
+  {id:64, realm:"ゲノム情報学", name:"佐藤　大気"},
+  {id:65, realm:"応用生物化学・農林学", name:"臼井　健郎"},
+  {id:66, realm:"応用生物化学・農林学", name:"小林　達彦"},
+  {id:67, realm:"応用生物化学・農林学", name:"田中　俊之"},
+  {id:68, realm:"応用生物化学・農林学", name:"谷本　啓司"},
+  {id:69, realm:"応用生物化学・農林学", name:"熊野　匠人"},
+  {id:70, realm:"応用生物化学・農林学", name:"松﨑　仁美"},
+  {id:71, realm:"応用生物化学・農林学", name:"向山 海凪"},
+  {id:72, realm:"応用生物化学・農林学", name:"岡根　泉"},
+  {id:73, realm:"応用生物化学・農林学", name:"藏滿　司夢"},
+];
+
+// Okabe-Ito palette ベースの色覚多様性対応カラー
+const REALM_COLORS = {
+  '英語のみで実施':            {bg:'#F0E0FF', text:'#5B21B6'}, // 紫系(CC79A7系)
+  '系統分類・進化学':          {bg:'#CCF0FB', text:'#004A6E'}, // スカイブルー(56B4E9系)
+  '生態学':                    {bg:'#CCF0E6', text:'#004433'}, // ブルーイッシュグリーン(009E73系)
+  '植物発生・生理学':          {bg:'#F9F0CC', text:'#5A3A00'}, // 黄(F0E442系)
+  '動物発生・生理学グループ1': {bg:'#FFE8CC', text:'#6B2800'}, // オレンジ(E69F00系)
+  '動物発生・生理学グループ2': {bg:'#FFD9CC', text:'#6B1A00'}, // バーミリオン(D55E00系)
+  '分子細胞生物学':            {bg:'#CCE0FF', text:'#002966'}, // ブルー(0072B2系)
+  'ゲノム情報学':              {bg:'#EECCE8', text:'#5C0035'}, // ローズ(CC79A7系 濃)
+  '応用生物化学・農林学':      {bg:'#E8E8E8', text:'#2D2D2D'}, // グレー(黒系)
+};
+
+// Dark mode adjusted badge colors
+function realmBadgeStyle(realm) {
+  const c = REALM_COLORS[realm] || {bg:'#E5E7EB', text:'#374151'};
+  return `background:${c.bg};color:${c.text};`;
+}
+
+/* ─── State ────────────────────────────────────────────── */
+let rankedIds = [];
+let avoidedIds = [];
+let currentFilter = 'all';
+let searchQuery = '';
+let studentInfo = {};
+let rankSortable = null;
+
+/* ─── Unique realms (fixed order from REALM_COLORS) ────── */
+const REALMS = Object.keys(REALM_COLORS).filter(r => INSTRUCTORS.some(i => i.realm === r));
+
+/* ─── Step 1 ───────────────────────────────────────────── */
+function proceedToStep2() {
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  let ok = true;
+
+  const setErr = (id, errId, cond) => {
+    document.getElementById(id).classList.toggle('err', cond);
+    document.getElementById(errId).classList.toggle('show', cond);
+    if (cond) ok = false;
+  };
+
+  setErr('f-name',  'err-name',  !name);
+  setErr('f-email', 'err-email',
+    !email || !email.endsWith('@u.tsukuba.ac.jp'));
+
+  if (!ok) return;
+
+  const sid = email.split('@')[0];
+  studentInfo = { name, sid, email };
+  document.getElementById('step1').hidden = true;
+  document.getElementById('step2').hidden = false;
+  document.getElementById('step-pill').textContent = 'Step 2 / 3';
+  document.getElementById('student-tag').innerHTML =
+    `<strong>${name}</strong>（${sid} · ${email}）`;
+  initStep2();
+}
+
+/* ─── Step 2 → Step 3 ─────────────────────────────────── */
+function proceedToStep3() {
+  if (rankedIds.length !== 20) return;
+  avoidedIds = [];
+  document.getElementById('step2').hidden = true;
+  document.getElementById('step3').hidden = false;
+  document.getElementById('step-pill').textContent = 'Step 3 / 3';
+  document.getElementById('student-tag3').innerHTML =
+    document.getElementById('student-tag').innerHTML;
+  renderAvoidPool();
+}
+
+function backToStep2() {
+  document.getElementById('step3').hidden = true;
+  document.getElementById('step2').hidden = false;
+  document.getElementById('step-pill').textContent = 'Step 2 / 3';
+}
+
+/* ─── Avoid pool rendering ─────────────────────────────── */
+function renderAvoidPool() {
+  const pool = document.getElementById('avoid-pool');
+  pool.innerHTML = '';
+  // rankedIds に含まれない教員のみ表示
+  const available = INSTRUCTORS.filter(i => !rankedIds.includes(i.id));
+  const byRealm = {};
+  available.forEach(i => {
+    if (!byRealm[i.realm]) byRealm[i.realm] = [];
+    byRealm[i.realm].push(i);
+  });
+  REALMS.forEach(realm => {
+    if (!byRealm[realm] || byRealm[realm].length === 0) return;
+    const grp = document.createElement('div');
+    grp.className = 'avoid-realm-group';
+    const realmEn = REALM_EN[realm] || realm;
+    grp.innerHTML = `<div class="avoid-realm-label">${realm} <span style="font-weight:400;text-transform:none;">/ ${realmEn}</span></div>`;
+    const items = document.createElement('div');
+    items.className = 'avoid-items';
+    byRealm[realm].forEach(instr => {
+      const chip = document.createElement('div');
+      chip.className = 'avoid-chip';
+      const c = REALM_COLORS[realm] || {bg:'#E8E8E8', text:'#2D2D2D'};
+      chip.style.background = c.bg;
+      chip.style.color = c.text;
+      chip.dataset.id = instr.id;
+      chip.textContent = instr.name;
+      chip.addEventListener('click', () => toggleAvoid(instr.id, chip));
+      items.appendChild(chip);
+    });
+    grp.appendChild(items);
+    pool.appendChild(grp);
+  });
+  updateAvoidBadge();
+}
+
+function toggleAvoid(id, chip) {
+  if (avoidedIds.includes(id)) {
+    avoidedIds = avoidedIds.filter(x => x !== id);
+    chip.classList.remove('selected');
+  } else {
+    avoidedIds.push(id);
+    chip.classList.add('selected');
+  }
+  updateAvoidBadge();
+}
+
+function updateAvoidBadge() {
+  const n = avoidedIds.length;
+  document.getElementById('avoid-badge').textContent = n;
+  document.getElementById('avoid-badge').classList.toggle('full', n > 0);
+  document.getElementById('avoid-info').textContent =
+    n === 0
+      ? '選択しない場合はそのまま「確認画面へ」を押してください。/ If none, proceed to the confirmation screen.'
+      : `${n}名を選択中。/ ${n} instructor(s) marked as avoid.`;
+}
+
+/* ─── Step 2 ───────────────────────────────────────────── */
+function initStep2() {
+  // GAS_URL 未設定バナー
+  if (!GAS_URL || GAS_URL.trim() === '') {
+    const banner = document.createElement('div');
+    banner.className = 'gas-banner';
+    banner.innerHTML = '⚠️ <strong>管理者へ / For Admin：</strong> <code>GAS_URL</code> が未設定です / is not set。'
+      + ' survey.html の先頭の <code>const GAS_URL = \'\';</code> に'
+      + ' Google Apps Script のデプロイ URL を設定してください。'
+      + ' <span style="opacity:.8;">/ Please paste the deployed Google Apps Script URL into <code>const GAS_URL = \'\';</code> at the top of survey.html.</span>';
+    document.getElementById('step2').prepend(banner);
+  }
+  buildFilters();
+  renderPool();
+  initRankSortable();
+  updateRankUI();
+}
+
+function buildFilters() {
+  const wrap = document.getElementById('realm-filters');
+  wrap.innerHTML = '';
+  const all = document.createElement('button');
+  all.className = 'rf-btn active';
+  all.textContent = 'すべて / All';
+  all.dataset.realm = 'all';
+  all.onclick = () => setFilter('all');
+  wrap.appendChild(all);
+  REALMS.forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'rf-btn';
+    const shortEn = {
+      '英語のみで実施': 'English-Only',
+      '系統分類・進化学': 'Phylogenetics & Evo.',
+      '生態学': 'Ecology',
+      '植物発生・生理学': 'Plant Dev. & Physiol.',
+      '動物発生・生理学グループ1': 'Animal Dev. Gr.1',
+      '動物発生・生理学グループ2': 'Animal Dev. Gr.2',
+      '分子細胞生物学': 'Mol. Cell Biol.',
+      'ゲノム情報学': 'Genomics & Bioinform.',
+      '応用生物化学・農林学': 'Appl. Biochem. & Agri.',
+    };
+    btn.textContent = r + (shortEn[r] ? ' / ' + shortEn[r] : '');
+    btn.dataset.realm = r;
+    btn.onclick = () => setFilter(r);
+    wrap.appendChild(btn);
+  });
+}
+
+function setFilter(realm) {
+  currentFilter = realm;
+  document.querySelectorAll('.rf-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.realm === realm);
+  });
+  renderPool();
+}
+
+function onSearch(q) {
+  searchQuery = q.toLowerCase();
+  renderPool();
+}
+
+function renderPool() {
+  const container = document.getElementById('pool-content');
+  container.innerHTML = '';
+
+  const query = searchQuery;
+  let totalVisible = 0;
+
+  // Group by realm
+  const groupRealms = currentFilter === 'all' ? REALMS : [currentFilter];
+  groupRealms.forEach(realm => {
+    const members = INSTRUCTORS.filter(i =>
+      i.realm === realm &&
+      (query === '' || i.name.toLowerCase().includes(query) || realm.toLowerCase().includes(query))
+    );
+    if (members.length === 0) return;
+    totalVisible += members.length;
+
+    const group = document.createElement('div');
+    group.className = 'realm-group';
+
+    const label = document.createElement('div');
+    label.className = 'realm-label';
+    label.textContent = realm + (REALM_EN[realm] ? ' / ' + REALM_EN[realm] : '');
+    group.appendChild(label);
+
+    members.forEach(instr => {
+      group.appendChild(buildPoolItem(instr));
+    });
+    container.appendChild(group);
+  });
+
+  document.getElementById('pool-count-label').textContent =
+    `（${totalVisible}名 / instructors）`;
+}
+
+function buildPoolItem(instr) {
+  const isRanked = rankedIds.includes(instr.id);
+  const div = document.createElement('div');
+  div.className = 'pool-item' + (isRanked ? ' ranked' : '');
+  div.dataset.id = instr.id;
+  div.title = isRanked ? '追加済み / Already added' : 'クリックまたはドラッグして追加 / Click or drag to add';
+
+  const rc = REALM_COLORS[instr.realm] || {bg:'#E5E7EB',text:'#374151'};
+
+  div.innerHTML = `
+    <span class="drag-hint" aria-hidden="true">⠿</span>
+    <span class="item-name">${instr.name}</span>
+    <span class="realm-badge" style="background:${rc.bg};color:${rc.text};">${shortRealm(instr.realm)}</span>
+    ${isRanked ? '<span class="added-badge">✓</span>' : ''}
+  `;
+
+  if (!isRanked) {
+    div.addEventListener('click', () => addToRanking(instr.id));
+  }
+  return div;
+}
+
+function shortRealm(r) {
+  // Bilingual abbreviations for badges
+  const m = {
+    '英語のみで実施':            '英語 / Eng.',
+    '系統分類・進化学':          '系統 / Phylo.',
+    '生態学':                    '生態 / Ecol.',
+    '植物発生・生理学':          '植物 / Plant',
+    '動物発生・生理学グループ1': '動物G1 / Anim.G1',
+    '動物発生・生理学グループ2': '動物G2 / Anim.G2',
+    '分子細胞生物学':            '分子 / Mol.',
+    'ゲノム情報学':              'ゲノム / Genom.',
+    '応用生物化学・農林学':      '応用 / Appl.',
+  };
+  return m[r] || r;
+}
+
+/* ─── Ranking ──────────────────────────────────────────── */
+function initRankSortable() {
+  const listEl = document.getElementById('rank-list');
+  if (rankSortable) { rankSortable.destroy(); rankSortable = null; }
+  rankSortable = Sortable.create(listEl, {
+    handle: '.drag-handle',
+    animation: 180,
+    ghostClass: 'sortable-ghost',
+    dragClass: 'sortable-drag',
+    group: {
+      name: 'rank',
+      put: function(to, from, dragEl) {
+        if (from.el === listEl) return true; // internal reorder
+        const id = parseInt(dragEl.dataset.id);
+        return !rankedIds.includes(id) && rankedIds.length < 20;
+      }
+    },
+    onAdd: function(evt) {
+      // A pool item was dragged in; replace with rank item
+      const draggedEl = evt.item;
+      const id = parseInt(draggedEl.dataset.id);
+      const insertIdx = evt.newIndex;
+
+      // Remove the pool-item clone
+      draggedEl.remove();
+
+      if (rankedIds.includes(id) || rankedIds.length >= 20) {
+        updateRankUI();
+        return;
+      }
+      // Insert ID at position
+      rankedIds.splice(insertIdx, 0, id);
+      rebuildRankDOM();
+      syncPoolHighlights();
+      updateRankUI();
+    },
+    onUpdate: function() {
+      // Reorder happened — sync rankedIds from DOM
+      rankedIds = [...document.querySelectorAll('#rank-list .rank-item')]
+        .map(el => parseInt(el.dataset.id));
+      updateRankNumbers();
+    },
+  });
+}
+
+function addToRanking(id) {
+  if (rankedIds.includes(id) || rankedIds.length >= 20) return;
+  rankedIds.push(id);
+  rebuildRankDOM();
+  syncPoolHighlights();
+  updateRankUI();
+}
+
+function removeFromRanking(id) {
+  rankedIds = rankedIds.filter(x => x !== id);
+  rebuildRankDOM();
+  syncPoolHighlights();
+  updateRankUI();
+}
+
+function rebuildRankDOM() {
+  const listEl = document.getElementById('rank-list');
+  listEl.innerHTML = '';
+  rankedIds.forEach((id, idx) => {
+    const instr = INSTRUCTORS.find(i => i.id === id);
+    if (!instr) return;
+    listEl.appendChild(buildRankItem(instr, idx + 1));
+  });
+  // Re-init sortable so it recognises new children
+  initRankSortable();
+}
+
+function buildRankItem(instr, rank) {
+  const div = document.createElement('div');
+  div.className = 'rank-item';
+  div.dataset.id = instr.id;
+
+  const rc = REALM_COLORS[instr.realm] || {bg:'#E5E7EB',text:'#374151'};
+  const tierClass = rank <= 5 ? 'tier1' : rank <= 10 ? 'tier2' : rank <= 15 ? 'tier3' : 'tier4';
+
+  div.innerHTML = `
+    <span class="rank-num ${tierClass}" aria-label="${rank}位 / Rank ${rank}">${rank}</span>
+    <span class="drag-handle" title="ドラッグして並び替え / Drag to reorder" aria-hidden="true">⠿</span>
+    <span class="item-name">${instr.name}</span>
+    <span class="realm-badge" style="background:${rc.bg};color:${rc.text};">${shortRealm(instr.realm)}</span>
+    <button class="remove-btn" title="削除 / Remove" aria-label="${instr.name}を削除 / Remove ${instr.name}" onclick="removeFromRanking(${instr.id})">×</button>
+  `;
+  return div;
+}
+
+function updateRankNumbers() {
+  // Called after internal reorder (rankedIds is already synced)
+  document.querySelectorAll('#rank-list .rank-item').forEach((el, i) => {
+    const num = el.querySelector('.rank-num');
+    const rank = i + 1;
+    num.textContent = rank;
+    num.classList.remove('tier1','tier2','tier3','tier4');
+    num.classList.add(rank <= 5 ? 'tier1' : rank <= 10 ? 'tier2' : rank <= 15 ? 'tier3' : 'tier4');
+    num.setAttribute('aria-label', `${rank}位 / Rank ${rank}`);
+  });
+}
+
+function syncPoolHighlights() {
+  renderPool();
+}
+
+function updateRankUI() {
+  const n = rankedIds.length;
+  const badge = document.getElementById('count-badge');
+  badge.textContent = `${n} / 20`;
+  badge.classList.toggle('full', n >= 20);
+
+  document.getElementById('rank-empty').hidden = n > 0;
+  document.getElementById('submit-info').textContent =
+    n === 0
+      ? '教員を選択してください（20名必須）/ Please select 20 instructors (required)'
+      : n < 20
+      ? `${n}名が選択されています。あと${20-n}名選択してください。/ ${n} selected. Please select ${20-n} more.`
+      : '20名の選択が完了しました。提出できます。/ All 20 selected. Ready to submit.';
+
+  document.getElementById('btn-submit').disabled = n !== 20;
+}
+
+/* ─── Confirmation ─────────────────────────────────────── */
+function openConfirm() {
+  if (rankedIds.length !== 20) return;
+  const body = document.getElementById('modal-body');
+
+  let html = `<div class="confirm-info">
+    <span class="ci-label">氏名 / Name</span><span class="ci-val">${studentInfo.name}</span>
+    <span class="ci-label">学籍番号 / Student ID</span><span class="ci-val">${studentInfo.sid}</span>
+    <span class="ci-label">メール / Email</span><span class="ci-val">${studentInfo.email}</span>
+  </div>
+  <div class="confirm-list-head">希望順位（${rankedIds.length}名）/ Preference Ranking (${rankedIds.length})</div>
+  <ol class="confirm-list">`;
+
+  rankedIds.forEach((id, idx) => {
+    const instr = INSTRUCTORS.find(i => i.id === id);
+    const rank = idx + 1;
+    const tierC = rank <= 5 ? 'tier1' : rank <= 10 ? 'tier2' : rank <= 15 ? 'tier3' : 'tier4';
+    html += `<li>
+      <span class="cnum ${tierC}">${rank}</span>
+      <span class="cname">${instr.name}</span>
+      <span class="crealm">${instr.realm}</span>
+    </li>`;
+  });
+  html += '</ol>';
+
+  if (avoidedIds.length > 0) {
+    html += `<div class="confirm-list-head" style="margin-top:16px;color:#b91c1c;">避けたい教員（${avoidedIds.length}名）/ Instructors to Avoid (${avoidedIds.length})</div><ul class="confirm-list">`;
+    avoidedIds.forEach(id => {
+      const instr = INSTRUCTORS.find(i => i.id === id);
+      html += `<li>
+        <span class="cnum" style="background:#b91c1c;">✕</span>
+        <span class="cname">${instr.name}</span>
+        <span class="crealm">${instr.realm}</span>
+      </li>`;
+    });
+    html += '</ul>';
+  } else {
+    html += `<div class="confirm-list-head" style="margin-top:16px;color:var(--text-sub);">避けたい教員 / Instructors to Avoid: <span style="font-weight:400;">なし / None</span></div>`;
+  }
+
+  body.innerHTML = html;
+  document.getElementById('confirm-overlay').hidden = false;
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay').hidden = true;
+}
+
+async function submitSurvey() {
+  document.getElementById('confirm-overlay').hidden = true;
+
+  // GAS_URL が未設定の場合は警告を出して続行しない
+  if (!GAS_URL || GAS_URL.trim() === '') {
+    alert('⚠️ エンドポイント URL が設定されていません。\nsurvey.html の先頭にある const GAS_URL に\nAzure Logic Apps の HTTP トリガー URL を設定してください。\n\n[EN] Endpoint URL is not set. Please paste the Azure Logic Apps HTTP trigger URL into const GAS_URL at the top of survey.html.');
+    document.getElementById('confirm-overlay').hidden = false;
+    return;
+  }
+
+  // 送信中オーバーレイを表示
+  document.getElementById('submitting-overlay').hidden = false;
+
+  // ── フラットな JSON ペイロードを構築（Azure Logic Apps → Excel 用）──
+  const flat = {
+    submitted_at: new Date().toISOString(),
+    name:         studentInfo.name,
+    student_id:   studentInfo.sid,
+    email:        studentInfo.email,
+  };
+  for (let i = 1; i <= 20; i++) {
+    const id    = rankedIds[i - 1];
+    const instr = id ? INSTRUCTORS.find(x => x.id === id) : null;
+    flat[`rank${i}_realm`]   = instr ? instr.realm : '';
+    flat[`rank${i}_teacher`] = instr ? instr.name  : '';
+  }
+  // 避けたい教員（カンマ区切りで記録）
+  flat['avoid_teachers'] = avoidedIds.map(id => {
+    const instr = INSTRUCTORS.find(x => x.id === id);
+    return instr ? instr.name : '';
+  }).filter(Boolean).join('; ');
+  flat['avoid_realms'] = avoidedIds.map(id => {
+    const instr = INSTRUCTORS.find(x => x.id === id);
+    return instr ? instr.realm : '';
+  }).filter(Boolean).join('; ');
+
+  // 成功画面用に元の構造も保持
+  const payload = {
+    name:    studentInfo.name,
+    sid:     studentInfo.sid,
+    email:   studentInfo.email,
+    ranking: rankedIds.map((id, idx) => {
+      const instr = INSTRUCTORS.find(i => i.id === id);
+      return { rank: idx + 1, id: instr.id, name: instr.name, realm: instr.realm };
+    }),
+    avoided: avoidedIds.map(id => {
+      const instr = INSTRUCTORS.find(i => i.id === id);
+      return { id: instr.id, name: instr.name, realm: instr.realm };
+    }),
+  };
+
+  // ── Azure Logic Apps に JSON POST ────────────────────────────
+  try {
+    const res = await fetch(GAS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(flat),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    onSubmitSuccess(payload);
+  } catch (err) {
+    document.getElementById('submitting-overlay').hidden = true;
+    alert('通信エラーが発生しました。\nインターネット接続を確認して再度お試しください。\n\n[EN] A network error occurred. Please check your internet connection and try again.\n\nError: ' + err.message);
+    document.getElementById('confirm-overlay').hidden = false;
+  }
+}
+
+/**
+ * hidden form + hidden iframe で GAS に POST する。
+ * クロスオリジンのリダイレクトを問題なく追える最も確実な方法。
+ * iframe の load イベント（またはタイムアウト）で完了を検知する。
+ */
+function submitViaHiddenForm(payload) {
+  return new Promise((resolve, reject) => {
+    const iframeName = 'gas-iframe-' + Date.now();
+
+    // 隠し iframe
+    const iframe = document.createElement('iframe');
+    iframe.name    = iframeName;
+    iframe.hidden  = true;
+    document.body.appendChild(iframe);
+
+    // 隠し form
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = GAS_URL;
+    form.target = iframeName;
+    form.hidden = true;
+
+    const input = document.createElement('input');
+    input.type  = 'hidden';
+    input.name  = 'payload';   // GAS 側で e.parameter.payload として受信
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    let settled = false;
+    function finish(isErr, errMsg) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      try { document.body.removeChild(form);   } catch (_) {}
+      // iframe は GAS のレスポンスを表示し終えてから少し後に削除
+      setTimeout(() => {
+        try { document.body.removeChild(iframe); } catch (_) {}
+      }, 500);
+      isErr ? reject(new Error(errMsg)) : resolve();
+    }
+
+    // iframe が読み込まれたら完了（クロスオリジンなので内容は読めないが
+    // load イベントは発火する）
+    iframe.addEventListener('load', () => finish(false));
+
+    // 15 秒たっても load が来なければタイムアウト→成功扱い
+    // （GAS の応答が遅いケースへの保険）
+    const timer = setTimeout(() => finish(false), 15000);
+
+    form.submit();
+  });
+}
+
+function onSubmitSuccess(payload) {
+  document.getElementById('submitting-overlay').hidden = true;
+  document.getElementById('step3').hidden = true;
+  document.getElementById('step-pill').textContent = '完了 / Done';
+
+  // 成功画面のコンテンツを構築
+  let html = `<div class="confirm-info" style="margin-bottom:12px;">
+    <span class="ci-label">氏名 / Name</span><span class="ci-val">${payload.name}</span>
+    <span class="ci-label">学籍番号 / Student ID</span><span class="ci-val">${payload.sid}</span>
+    <span class="ci-label">メール / Email</span><span class="ci-val">${payload.email}</span>
+  </div>
+  <div class="confirm-list-head">希望順位（${payload.ranking.length}名）/ Preference Ranking (${payload.ranking.length})</div>
+  <ol class="confirm-list">`;
+  payload.ranking.forEach((r, idx) => {
+    const rank = idx + 1;
+    const tierC = rank <= 5 ? 'tier1' : rank <= 10 ? 'tier2' : rank <= 15 ? 'tier3' : 'tier4';
+    html += `<li>
+      <span class="cnum ${tierC}">${rank}</span>
+      <span class="cname">${r.name}</span>
+      <span class="crealm">${r.realm}</span>
+    </li>`;
+  });
+  html += '</ol>';
+
+  if (payload.avoided && payload.avoided.length > 0) {
+    html += `<div class="confirm-list-head" style="margin-top:16px;color:#b91c1c;">避けたい教員（${payload.avoided.length}名）/ Instructors to Avoid (${payload.avoided.length})</div><ul class="confirm-list">`;
+    payload.avoided.forEach(r => {
+      html += `<li>
+        <span class="cnum" style="background:#b91c1c;">✕</span>
+        <span class="cname">${r.name}</span>
+        <span class="crealm">${r.realm}</span>
+      </li>`;
+    });
+    html += '</ul>';
+  } else {
+    html += `<div class="confirm-list-head" style="margin-top:16px;color:var(--text-sub);">避けたい教員 / Instructors to Avoid: <span style="font-weight:400;">なし / None</span></div>`;
+  }
+
+  document.getElementById('success-body').innerHTML = html;
+  document.getElementById('success').hidden = false;
+}
+
+/* ─── Keyboard close modal ─────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeConfirm();
+});
+document.getElementById('confirm-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeConfirm();
+});
+
+/* ─── Pool drag-from-pool support via Sortable ─────────── */
+// pool-content の直下は realm-group なので、各グループに個別に Sortable を設定する
+let poolSortables = [];
+const _origRenderPool = renderPool;
+renderPool = function() {
+  _origRenderPool();
+  poolSortables.forEach(s => { try { s.destroy(); } catch(e){} });
+  poolSortables = [];
+  document.querySelectorAll('#pool-content .realm-group').forEach(group => {
+    poolSortables.push(Sortable.create(group, {
+      group: { name: 'rank', pull: 'clone', put: false },
+      sort: false,
+      animation: 120,
+      ghostClass: 'sortable-ghost',
+      dragClass:  'sortable-drag',
+      filter:     '.ranked, .realm-label',
+      draggable:  '.pool-item:not(.ranked)',
+    }));
+  });
+};
+</script>
