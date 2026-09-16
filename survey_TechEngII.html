@@ -379,6 +379,29 @@ button { cursor: pointer; border: none; background: none; }
 }
 .search-box:focus { border-color: var(--focus); }
 
+.rf-toggle {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 11px;
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s, color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.rf-toggle.filter-active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-lt);
+}
+
 .realm-filters {
   display: flex;
   flex-wrap: wrap;
@@ -988,8 +1011,14 @@ label .bi-en {
   /* Hide rank count badge in panel header (tab bar shows it already) */
   #count-badge { display: none; }
 
+  /* Filter toggle button: visible on mobile; filters hidden until opened */
+  .rf-toggle { display: flex; }
+  .realm-filters { display: none; }
+  .realm-filters.open { display: flex; }
+
   /* Rank head: wrap so drag hint drops below heading row */
   .rank-head { flex-wrap: wrap; align-items: baseline; padding: 10px 14px 8px; }
+  .panel-head h3 { font-size: 13px; }
   .rank-head h3 { flex: 1 1 auto; min-width: 0; font-size: 13px; }
   .rank-head .mobile-only { flex: 0 0 100%; margin-top: 3px; }
 
@@ -1098,6 +1127,9 @@ label .bi-en {
       <div class="panel-head">
         <h3>候補教員リスト <span class="bi-en" style="display:inline;margin-left:0;font-size:.8em;">/ Instructor List</span> <span style="font-weight:400;font-size:12px;color:var(--text-3)" id="pool-count-label"></span></h3>
         <input type="search" class="search-box" id="pool-search" placeholder="教員名で検索… / Search by name…" oninput="onSearch(this.value)">
+        <button class="rf-toggle" id="rf-toggle" onclick="toggleFilters()">
+          <span id="rf-toggle-label">分野 · すべて / All ▾</span>
+        </button>
         <div class="realm-filters" id="realm-filters"></div>
       </div>
       <div class="pool-scroll" id="pool-scroll">
@@ -1508,11 +1540,39 @@ function buildFilters() {
   });
 }
 
+function toggleFilters() {
+  const wrap = document.getElementById('realm-filters');
+  const isOpen = wrap.classList.toggle('open');
+  updateToggleBtn(isOpen);
+}
+
+function updateToggleBtn(forceOpen) {
+  const btn = document.getElementById('rf-toggle');
+  const lbl = document.getElementById('rf-toggle-label');
+  const wrap = document.getElementById('realm-filters');
+  if (!btn || !lbl) return;
+  const isOpen = forceOpen !== undefined ? forceOpen : wrap.classList.contains('open');
+  const isFiltered = currentFilter !== 'all';
+  if (isOpen) {
+    lbl.textContent = '▲ 閉じる / Close';
+  } else {
+    const name = isFiltered ? currentFilter : 'すべて / All';
+    lbl.textContent = '分野 · ' + name + ' ▾';
+  }
+  btn.classList.toggle('filter-active', isFiltered);
+}
+
 function setFilter(realm) {
   currentFilter = realm;
   document.querySelectorAll('.rf-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.realm === realm);
   });
+  // On mobile: auto-close filter panel after selection
+  if (window.innerWidth <= 700) {
+    const wrap = document.getElementById('realm-filters');
+    if (wrap) wrap.classList.remove('open');
+  }
+  updateToggleBtn(false);
   renderPool();
 }
 
