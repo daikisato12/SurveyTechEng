@@ -86,66 +86,90 @@ button { cursor: pointer; border: none; background: none; }
 .site-header {
   background: var(--primary);
   color: #fff;
-  padding: 0 24px;
+  padding: 12px 24px 14px;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 56px;
+  flex-direction: column;
+  gap: 5px;
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
 }
-.site-header .logo-mark {
-  width: 32px; height: 32px;
-  background: rgba(255,255,255,.18);
-  border-radius: 8px;
-  display: grid; place-items: center;
-  font-family: 'Noto Serif JP', serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .02em;
-  flex-shrink: 0;
+.header-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
 }
-.site-header .title-group { flex: 1; }
-.course-label {
-  font-family: 'Noto Serif JP', serif;
+.header-row-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.org-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: .05em;
+  opacity: .65;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.org-label .org-en {
+  font-weight: 400;
+  margin-left: 4px;
+}
+.course-badge {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: .08em;
-  opacity: .6;
-  margin-bottom: 1px;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 5px;
+  padding: 2px 9px 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+.course-badge .badge-en {
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: .03em;
+  opacity: .82;
+  margin-left: 5px;
 }
 .site-header h1 {
   font-family: 'Noto Serif JP', serif;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: .05em;
+  letter-spacing: .04em;
+  line-height: 1.3;
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .site-header h1 .h1-en {
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 400;
-  font-size: 12px;
-  opacity: .78;
+  font-size: 13px;
+  opacity: .72;
   letter-spacing: .02em;
 }
-.site-header .subtitle {
-  font-size: 11px;
-  opacity: .72;
-  letter-spacing: .03em;
-  line-height: 1.5;
-}
 .step-pill {
-  background: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.22);
   border-radius: 20px;
-  padding: 3px 12px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 3px 13px;
+  font-size: 11.5px;
+  font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
+  letter-spacing: .05em;
 }
 
 /* ─── Step 1 ─────────────────────────────────────────────── */
@@ -857,13 +881,14 @@ label .bi-en {
 
 <!-- ═════════════════════ HEADER ════════════════════════════ -->
 <header class="site-header">
-  <div class="logo-mark">筑波</div>
-  <div class="title-group">
-    <div class="course-label">専門語学BII / Technical English II</div>
-    <h1>受講希望調査<span class="h1-en">/ Course Preference Survey</span></h1>
-    <div class="subtitle">筑波大学 生物学類 · University of Tsukuba, College of Biological Sciences</div>
+  <div class="header-row-top">
+    <div class="org-label">筑波大学 生物学類<span class="org-en">· University of Tsukuba, College of Biological Sciences</span></div>
+    <div class="step-pill" id="step-pill">Step 1 / 3</div>
   </div>
-  <div class="step-pill" id="step-pill">Step 1 / 2</div>
+  <div class="header-row-main">
+    <span class="course-badge">専門語学BII<span class="badge-en">/ Technical English II</span></span>
+    <h1>受講希望調査<span class="h1-en">Course Preference Survey</span></h1>
+  </div>
 </header>
 
 <!-- ═════════════════════ STEP 1 ════════════════════════════ -->
