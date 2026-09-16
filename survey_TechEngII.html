@@ -4,64 +4,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
 <style>
-/* ─── Design tokens ────────────────────────────────────── */
+/* ─── Design tokens ─── Tsukuba University Purple ────── */
 :root {
-  --bg:          #EBF0F7;
+  --bg:          #F0EBF7;
   --surface:     #FFFFFF;
-  --surface-alt: #F3F6FB;
-  --primary:     #1A4B82;
-  --primary-lt:  #E6EEF8;
-  --primary-hov: #123868;
+  --surface-alt: #F6F2FB;
+  --primary:     #5B2D8E;   /* 筑波大紫 Tsukuba purple */
+  --primary-lt:  #EAE0F5;
+  --primary-hov: #461F72;
   --accent:      #1E8C5A;
-  --text:        #1A2636;
-  --text-2:      #516070;
-  --text-3:      #8BA3B8;
-  --border:      #D2DCEA;
-  --focus:       #1A4B82;
+  --text:        #1E1030;
+  --text-2:      #5A4472;
+  --text-3:      #9B85B5;
+  --border:      #D8CEEA;
+  --focus:       #5B2D8E;
   --avail:       #1E8C5A;
-  --unavail:     #B0BCC9;
+  --unavail:     #BDB0CE;
   --danger:      #C0392B;
-  --shadow:      0 2px 8px rgba(20,50,100,.10);
-  --shadow-md:   0 6px 20px rgba(20,50,100,.13);
+  --shadow:      0 2px 8px rgba(60,20,100,.10);
+  --shadow-md:   0 6px 20px rgba(60,20,100,.13);
   --r:           12px;
   --r-sm:        7px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:          #0D1B2E;
-    --surface:     #162336;
-    --surface-alt: #1C2D42;
-    --primary:     #4A90D9;
-    --primary-lt:  #1A2E48;
-    --primary-hov: #5EA4E8;
+    --bg:          #150D22;
+    --surface:     #1F1535;
+    --surface-alt: #271C40;
+    --primary:     #A07CD4;
+    --primary-lt:  #2A1A48;
+    --primary-hov: #B590DF;
     --accent:      #35C97A;
-    --text:        #DDE8F5;
-    --text-2:      #8FAEC7;
-    --text-3:      #4E6A85;
-    --border:      #233349;
-    --focus:       #4A90D9;
+    --text:        #EDE6F8;
+    --text-2:      #A894C8;
+    --text-3:      #5E4880;
+    --border:      #352650;
+    --focus:       #A07CD4;
     --avail:       #35C97A;
-    --unavail:     #3A4E62;
+    --unavail:     #3E2E5A;
     --danger:      #E86B60;
     --shadow:      0 2px 8px rgba(0,0,0,.35);
     --shadow-md:   0 6px 20px rgba(0,0,0,.45);
   }
 }
 :root[data-theme="dark"] {
-  --bg:          #0D1B2E;
-  --surface:     #162336;
-  --surface-alt: #1C2D42;
-  --primary:     #4A90D9;
-  --primary-lt:  #1A2E48;
-  --primary-hov: #5EA4E8;
+  --bg:          #150D22;
+  --surface:     #1F1535;
+  --surface-alt: #271C40;
+  --primary:     #A07CD4;
+  --primary-lt:  #2A1A48;
+  --primary-hov: #B590DF;
   --accent:      #35C97A;
-  --text:        #DDE8F5;
-  --text-2:      #8FAEC7;
-  --text-3:      #4E6A85;
-  --border:      #233349;
-  --focus:       #4A90D9;
+  --text:        #EDE6F8;
+  --text-2:      #A894C8;
+  --text-3:      #5E4880;
+  --border:      #352650;
+  --focus:       #A07CD4;
   --avail:       #35C97A;
-  --unavail:     #3A4E62;
+  --unavail:     #3E2E5A;
   --danger:      #E86B60;
   --shadow:      0 2px 8px rgba(0,0,0,.35);
   --shadow-md:   0 6px 20px rgba(0,0,0,.45);
@@ -902,14 +902,108 @@ label .bi-en {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
+/* ─── Mobile Tab Bar (Step 2 panel switcher) ─────────────── */
+.s2-tab-bar {
+  display: none;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.s2-tab {
+  flex: 1;
+  padding: 11px 10px 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  color: var(--text-3);
+  transition: color .15s, border-color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+.s2-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+.s2-tab .tab-badge {
+  background: var(--border);
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 7px;
+  min-width: 22px;
+  display: inline-block;
+  text-align: center;
+}
+.s2-tab.active .tab-badge { background: var(--primary); color: #fff; }
+
 /* ─── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 700px) {
-  .form-card { padding: 28px 22px 24px; }
-  .pool-panel, .rank-panel { max-height: 60vh; }
+  /* Header: compact, hide English org text */
+  .org-en { display: none; }
+  .site-header { padding: 9px 16px 11px; gap: 3px; }
+  .site-header h1 { font-size: 17px; }
+  .course-badge { font-size: 11px; padding: 2px 8px 2px; }
+  .step-pill { font-size: 11px; padding: 2px 10px; }
+
+  /* Form card */
+  .form-card { padding: 24px 18px 20px; }
+  .card-icon { width: 44px; height: 44px; margin-bottom: 14px; }
+  .form-card h2 { font-size: 18px; }
+
+  /* Inputs: comfortable touch size */
+  input[type="text"], input[type="email"] { font-size: 16px; padding: 11px 13px; }
+  .btn-primary { padding: 14px 20px; font-size: 15px; }
+
+  /* Step 2 tab-based switching */
+  .s2-tab-bar { display: flex; }
+  .s2-hint { display: none; }
+  #step2 { height: auto; overflow: visible; }
+  .s2-body { grid-template-columns: 1fr; height: auto; }
+
+  /* Panel visibility via class on #step2 */
+  #step2:not(.show-rank) .rank-panel { display: none; }
+  #step2.show-rank .pool-panel { display: none; }
+
+  /* Panel sizing */
+  .pool-panel { border-right: none; }
+  .pool-scroll { max-height: 58vh; overflow-y: auto; }
+  .rank-scroll { max-height: 58vh; overflow-y: auto; }
+
+  /* Touch targets */
+  .pool-item { min-height: 44px; padding: 10px 12px; }
+  .rank-item { min-height: 46px; }
+  .remove-btn { width: 32px; height: 32px; font-size: 16px; }
+  .avoid-chip { padding: 9px 14px; font-size: .9rem; min-height: 40px; }
+
+  /* Submit bar: stack on mobile */
+  .submit-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 16px; }
+  .btn-submit { width: 100%; text-align: center; justify-content: center; padding: 13px 16px; font-size: 14px; }
+  .submit-info { font-size: 12px; }
+
+  /* Confirm modal: full width */
+  .modal-card { margin: 16px; }
+
+  /* Step 3 header: reduce padding */
+  .step3-header { padding: 16px 16px 12px; }
+  #avoid-pool { padding: 12px 16px; }
+
+  /* Back button larger */
+  .btn-back-step { padding: 8px 14px; font-size: 13px; }
+
+  /* warn/info notes: smaller text */
+  .warn-note, .info-note { font-size: 12px; }
 }
+
 @media (max-width: 480px) {
-  .s2-toolbar { padding: 10px 14px; gap: 8px; flex-wrap: wrap; }
+  /* Hide bilingual English suffixes to save space */
+  .badge-en { display: none; }
+  .h1-en { display: none; }
+  .s2-toolbar { padding: 10px 14px; gap: 8px; }
   .pool-scroll, .rank-scroll { padding: 8px 10px 16px; }
+  .realm-badge { display: none; }
 }
 </style>
 
@@ -969,6 +1063,16 @@ label .bi-en {
   <div class="s2-toolbar">
     <div class="student-tag" id="student-tag"></div>
     <div class="s2-hint">← 左リストから教員をドラッグ or クリックして右へ追加 · 右列でドラッグして並び替え <span class="bi-en" style="display:inline;margin-left:4px;">/ Drag or click from left to add · Drag right column to reorder</span></div>
+  </div>
+
+  <!-- Mobile Tab Bar (visible only on ≤700px) -->
+  <div class="s2-tab-bar" id="s2-tab-bar">
+    <div class="s2-tab active" id="tab-pool" onclick="switchS2Tab('pool')">
+      候補リスト <span class="tab-badge" id="tab-pool-badge">__INSTRUCTOR_COUNT__</span>
+    </div>
+    <div class="s2-tab" id="tab-rank" onclick="switchS2Tab('rank')">
+      希望順位 <span class="tab-badge" id="tab-rank-badge">0/20</span>
+    </div>
   </div>
 
   <!-- Body -->
@@ -1124,78 +1228,78 @@ const REALM_EN = {
 /* ─── Data ────────────────────────────────────────────── */
 const INSTRUCTORS = [
   {id:1, realm:"英語のみで実施", name:"Irving, Louis"},
-  {id:2, realm:"英語のみで実施", name:"VOGT Kaspar Manuel"},
-  {id:3, realm:"英語のみで実施", name:"Kowit, Hengphasatporn"},
+  {id:2, realm:"英語のみで実施", name:"Vogt, Kaspar Manuel"},
+  {id:3, realm:"英語のみで実施", name:"Hengphasatporn, Kowit"},
   {id:4, realm:"英語のみで実施", name:"Casco-Robles, Martin"},
   {id:5, realm:"英語のみで実施", name:"Harvey, Benjamin"},
-  {id:6, realm:"英語のみで実施", name:"Wanyi, Lee"},
-  {id:7, realm:"系統分類・進化学", name:"出川　洋介"},
-  {id:8, realm:"系統分類・進化学", name:"石田　健一郎"},
-  {id:9, realm:"系統分類・進化学", name:"中山　剛"},
-  {id:10, realm:"系統分類・進化学", name:"白鳥　峻志"},
-  {id:11, realm:"系統分類・進化学", name:"和田　洋"},
-  {id:12, realm:"系統分類・進化学", name:"中野　裕昭"},
-  {id:13, realm:"系統分類・進化学", name:"八畑　謙介"},
-  {id:14, realm:"系統分類・進化学", name:"竹中　將起"},
-  {id:15, realm:"系統分類・進化学", name:"守野　孔明"},
-  {id:16, realm:"系統分類・進化学", name:"露木　葵唯"},
-  {id:17, realm:"系統分類・進化学", name:"藤田　麻里"},
-  {id:18, realm:"生態学", name:"廣田　充"},
-  {id:19, realm:"生態学", name:"大橋　一晴"},
-  {id:20, realm:"生態学", name:"大森　裕子"},
-  {id:21, realm:"生態学", name:"増本　翔太"},
-  {id:22, realm:"生態学", name:"徳永　幸彦"},
-  {id:23, realm:"生態学", name:"佐藤　幸恵"},
-  {id:24, realm:"生態学", name:"横井　智之"},
-  {id:25, realm:"植物発生・生理学", name:"菊池　彰"},
-  {id:26, realm:"植物発生・生理学", name:"壽崎　拓哉"},
-  {id:27, realm:"植物発生・生理学", name:"三浦　謙治"},
-  {id:28, realm:"植物発生・生理学", name:"小口　太一"},
-  {id:29, realm:"植物発生・生理学", name:"前田　義昌"},
-  {id:30, realm:"植物発生・生理学", name:"蓑田　歩"},
-  {id:31, realm:"動物発生・生理学グループ2", name:"笹倉　靖徳"},
-  {id:32, realm:"動物発生・生理学グループ1", name:"丹羽　隆介"},
-  {id:33, realm:"動物発生・生理学グループ1", name:"石川　由希"},
-  {id:34, realm:"動物発生・生理学グループ1", name:"島田　裕子"},
-  {id:35, realm:"動物発生・生理学グループ2", name:"谷口　俊介"},
-  {id:36, realm:"動物発生・生理学グループ1", name:"上山　拓己"},
-  {id:37, realm:"動物発生・生理学グループ1", name:"佐奈喜　祐哉"},
-  {id:38, realm:"動物発生・生理学グループ1", name:"春本　敏之"},
-  {id:39, realm:"動物発生・生理学グループ2", name:"千葉　親文"},
-  {id:40, realm:"動物発生・生理学グループ2", name:"櫻井　啓輔"},
-  {id:41, realm:"動物発生・生理学グループ2", name:"鈴木　大地"},
-  {id:42, realm:"動物発生・生理学グループ2", name:"志賀　翔太"},
-  {id:43, realm:"分子細胞生物学", name:"谷　一寿"},
-  {id:44, realm:"分子細胞生物学", name:"野﨑　翔平"},
-  {id:45, realm:"分子細胞生物学", name:"平川　泰久"},
-  {id:46, realm:"分子細胞生物学", name:"稲葉　一男"},
-  {id:47, realm:"分子細胞生物学", name:"千葉　智樹"},
-  {id:48, realm:"分子細胞生物学", name:"中田　和人"},
-  {id:49, realm:"分子細胞生物学", name:"中野　賢太郎"},
-  {id:50, realm:"分子細胞生物学", name:"石川　香"},
-  {id:51, realm:"分子細胞生物学", name:"鶴田　文憲"},
-  {id:52, realm:"分子細胞生物学", name:"濱　祐太郎"},
-  {id:53, realm:"ゲノム情報学", name:"稲垣　祐司"},
-  {id:54, realm:"ゲノム情報学", name:"桑山　秀一"},
-  {id:55, realm:"ゲノム情報学", name:"重信　秀治"},
-  {id:56, realm:"ゲノム情報学", name:"澤村　京一"},
-  {id:57, realm:"ゲノム情報学", name:"豊福　雅典"},
-  {id:58, realm:"ゲノム情報学", name:"原田　隆平"},
-  {id:59, realm:"ゲノム情報学", name:"伊藤　希"},
-  {id:60, realm:"系統分類・進化学", name:"中山　卓郎"},
-  {id:61, realm:"ゲノム情報学", name:"鈴木　重勝"},
-  {id:62, realm:"ゲノム情報学", name:"徳納　吉秀"},
-  {id:63, realm:"ゲノム情報学", name:"賴本　隼汰"},
-  {id:64, realm:"ゲノム情報学", name:"佐藤　大気"},
-  {id:65, realm:"応用生物化学・農林学", name:"臼井　健郎"},
-  {id:66, realm:"応用生物化学・農林学", name:"小林　達彦"},
-  {id:67, realm:"応用生物化学・農林学", name:"田中　俊之"},
-  {id:68, realm:"応用生物化学・農林学", name:"谷本　啓司"},
-  {id:69, realm:"応用生物化学・農林学", name:"熊野　匠人"},
-  {id:70, realm:"応用生物化学・農林学", name:"松﨑　仁美"},
-  {id:71, realm:"応用生物化学・農林学", name:"向山　海凪"},
-  {id:72, realm:"応用生物化学・農林学", name:"岡根　泉"},
-  {id:73, realm:"応用生物化学・農林学", name:"藏滿　司夢"},
+  {id:6, realm:"英語のみで実施", name:"Lee, Wanyi"},
+  {id:7, realm:"系統分類・進化学", name:"出川　洋介/Degawa, Yousuke"},
+  {id:8, realm:"系統分類・進化学", name:"石田　健一郎/Ishida, Ken-ichiro"},
+  {id:9, realm:"系統分類・進化学", name:"中山　剛/Nakayama, Takeshi"},
+  {id:10, realm:"系統分類・進化学", name:"白鳥　峻志/Shiratori, Takashi"},
+  {id:11, realm:"系統分類・進化学", name:"和田　洋/Wada, Hiroshi"},
+  {id:12, realm:"系統分類・進化学", name:"中野　裕昭/Nakano, Hiroaki"},
+  {id:13, realm:"系統分類・進化学", name:"八畑　謙介/Yahata, Kensuke"},
+  {id:14, realm:"系統分類・進化学", name:"竹中　將起/Takenaka, Masaki"},
+  {id:15, realm:"系統分類・進化学", name:"守野　孔明/Morino, Yoshiaki"},
+  {id:16, realm:"系統分類・進化学", name:"露木　葵唯/Tsuyuki, Aoi"},
+  {id:17, realm:"系統分類・進化学", name:"藤田　麻里/Fujita, Mari"},
+  {id:18, realm:"生態学", name:"廣田　充/Hirota, Mitsuru"},
+  {id:19, realm:"生態学", name:"大橋　一晴/Ohashi, Kazuharu"},
+  {id:20, realm:"生態学", name:"大森　裕子/Omori, Yuko"},
+  {id:21, realm:"生態学", name:"増本　翔太/Masumoto, Shota"},
+  {id:22, realm:"生態学", name:"徳永　幸彦/Toquenaga, Yukihiko"},
+  {id:23, realm:"生態学", name:"佐藤　幸恵/Sato, Yukie"},
+  {id:24, realm:"生態学", name:"横井　智之/Yokoi, Tomoyuki"},
+  {id:25, realm:"植物発生・生理学", name:"菊池　彰/Kikuchi, Akira"},
+  {id:26, realm:"植物発生・生理学", name:"壽崎　拓哉/Suzaki, Takuya"},
+  {id:27, realm:"植物発生・生理学", name:"三浦　謙治/Miura, Kenji"},
+  {id:28, realm:"植物発生・生理学", name:"小口　太一/Oguchi, Taichi"},
+  {id:29, realm:"植物発生・生理学", name:"前田　義昌/Maeda, Yoshiaki"},
+  {id:30, realm:"植物発生・生理学", name:"蓑田　歩/Minoda, Ayumi"},
+  {id:31, realm:"動物発生・生理学グループ2", name:"笹倉　靖徳/Sasakura, Yasunori"},
+  {id:32, realm:"動物発生・生理学グループ1", name:"丹羽　隆介/Niwa, Ryusuke"},
+  {id:33, realm:"動物発生・生理学グループ1", name:"石川　由希/Ishikawa, Yuki"},
+  {id:34, realm:"動物発生・生理学グループ1", name:"島田　裕子/Shimada, Yuko"},
+  {id:35, realm:"動物発生・生理学グループ2", name:"谷口　俊介/Yaguchi, Shunsuke"},
+  {id:36, realm:"動物発生・生理学グループ1", name:"上山　拓己/Kamiyama, Takumi"},
+  {id:37, realm:"動物発生・生理学グループ1", name:"佐奈喜　祐哉/Sanaki, Yuya"},
+  {id:38, realm:"動物発生・生理学グループ1", name:"春本　敏之/Harumoto, Toshiyuki"},
+  {id:39, realm:"動物発生・生理学グループ2", name:"千葉　親文/Chiba, Chikafumi"},
+  {id:40, realm:"動物発生・生理学グループ2", name:"櫻井　啓輔/Sakurai, Keisuke"},
+  {id:41, realm:"動物発生・生理学グループ2", name:"鈴木　大地/Suzuki, Daichi"},
+  {id:42, realm:"動物発生・生理学グループ2", name:"志賀　翔太/Shiga, Shota"},
+  {id:43, realm:"分子細胞生物学", name:"谷　一寿/Tani, Kazutoshi"},
+  {id:44, realm:"分子細胞生物学", name:"野﨑　翔平/Nosaki, Shohei"},
+  {id:45, realm:"分子細胞生物学", name:"平川　泰久/Hirakawa, Yoshihisa"},
+  {id:46, realm:"分子細胞生物学", name:"稲葉　一男/Inaba, Kazuo"},
+  {id:47, realm:"分子細胞生物学", name:"千葉　智樹/Chiba, Tomoki"},
+  {id:48, realm:"分子細胞生物学", name:"中田　和人/Nakada, Kazuto"},
+  {id:49, realm:"分子細胞生物学", name:"中野　賢太郎/Nakano, Kentaro"},
+  {id:50, realm:"分子細胞生物学", name:"石川　香/Ishikawa, Kaori"},
+  {id:51, realm:"分子細胞生物学", name:"鶴田　文憲/Tsuruta, Fuminori"},
+  {id:52, realm:"分子細胞生物学", name:"濱　祐太郎/Hama, Yutaro"},
+  {id:53, realm:"ゲノム情報学", name:"稲垣　祐司/Inagaki, Yuji"},
+  {id:54, realm:"ゲノム情報学", name:"桑山　秀一/Kuwayama, Hidekazu"},
+  {id:55, realm:"ゲノム情報学", name:"重信　秀治/Shigenobu, Shuji"},
+  {id:56, realm:"ゲノム情報学", name:"澤村　京一/Sawamura, Kyoichi"},
+  {id:57, realm:"ゲノム情報学", name:"豊福　雅典/Toyofuku, Masanori"},
+  {id:58, realm:"ゲノム情報学", name:"原田　隆平/Harada, Ryuhei"},
+  {id:59, realm:"ゲノム情報学", name:"伊藤　希/Ytow, Nozomi"},
+  {id:60, realm:"系統分類・進化学", name:"中山　卓郎/Nakayama, Takuro"},
+  {id:61, realm:"ゲノム情報学", name:"鈴木　重勝/Suzuki, Shigekatsu"},
+  {id:62, realm:"ゲノム情報学", name:"徳納　吉秀/Tokunou, Yoshihide"},
+  {id:63, realm:"ゲノム情報学", name:"賴本　隼汰/Yorimoto, Shunta"},
+  {id:64, realm:"ゲノム情報学", name:"佐藤　大気/Sato, Daiki"},
+  {id:65, realm:"応用生物化学・農林学", name:"臼井　健郎/Usui, Takeo"},
+  {id:66, realm:"応用生物化学・農林学", name:"小林　達彦/Kobayashi, Michihiko"},
+  {id:67, realm:"応用生物化学・農林学", name:"田中　俊之/Tanaka, Toshiyuki"},
+  {id:68, realm:"応用生物化学・農林学", name:"谷本　啓司/Tanimoto, Keiji"},
+  {id:69, realm:"応用生物化学・農林学", name:"熊野　匠人/Kumano, Takuto"},
+  {id:70, realm:"応用生物化学・農林学", name:"松﨑　仁美/Matsuzaki, Hitomi"},
+  {id:71, realm:"応用生物化学・農林学", name:"向山　海凪/Mukaiyama, Minagi"},
+  {id:72, realm:"応用生物化学・農林学", name:"岡根　泉/Okane, Izumi"},
+  {id:73, realm:"応用生物化学・農林学", name:"藏滿　司夢/Kuramitsu, Kazumu"},
 ];
 
 // Okabe-Ito palette ベースの色覚多様性対応カラー
@@ -1511,12 +1615,33 @@ function initRankSortable() {
   });
 }
 
+/* ─── Mobile tab switcher (Step 2) ─────────────────────── */
+function switchS2Tab(which) {
+  const step2 = document.getElementById('step2');
+  document.getElementById('tab-pool').classList.toggle('active', which === 'pool');
+  document.getElementById('tab-rank').classList.toggle('active', which === 'rank');
+  if (which === 'rank') {
+    step2.classList.add('show-rank');
+  } else {
+    step2.classList.remove('show-rank');
+  }
+}
+
+function updateTabBadges() {
+  const poolBadge = document.getElementById('tab-pool-badge');
+  const rankBadge = document.getElementById('tab-rank-badge');
+  if (poolBadge) poolBadge.textContent = INSTRUCTORS.length - rankedIds.length;
+  if (rankBadge) rankBadge.textContent = `${rankedIds.length}/20`;
+}
+
 function addToRanking(id) {
   if (rankedIds.includes(id) || rankedIds.length >= 20) return;
   rankedIds.push(id);
   rebuildRankDOM();
   syncPoolHighlights();
   updateRankUI();
+  // On mobile, auto-switch to rank panel so user sees the result
+  if (window.innerWidth <= 700) switchS2Tab('rank');
 }
 
 function removeFromRanking(id) {
@@ -1587,6 +1712,7 @@ function updateRankUI() {
       : '20名の選択が完了しました。提出できます。/ All 20 selected. Ready to submit.';
 
   document.getElementById('btn-submit').disabled = n !== 20;
+  updateTabBadges();
 }
 
 /* ─── Confirmation ─────────────────────────────────────── */
