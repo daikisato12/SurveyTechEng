@@ -988,6 +988,11 @@ label .bi-en {
   /* Hide rank count badge in panel header (tab bar shows it already) */
   #count-badge { display: none; }
 
+  /* Rank head: wrap so drag hint drops below heading row */
+  .rank-head { flex-wrap: wrap; align-items: baseline; padding: 10px 14px 8px; }
+  .rank-head h3 { flex: 1 1 auto; min-width: 0; font-size: 13px; }
+  .rank-head .mobile-only { flex: 0 0 100%; margin-top: 3px; }
+
   /* Submit bar: stack on mobile */
   .submit-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 16px; }
   .btn-submit { width: 100%; text-align: center; justify-content: center; padding: 13px 16px; font-size: 14px; }
@@ -1961,16 +1966,19 @@ renderPool = function() {
   _origRenderPool();
   poolSortables.forEach(s => { try { s.destroy(); } catch(e){} });
   poolSortables = [];
-  document.querySelectorAll('#pool-content .realm-group').forEach(group => {
-    poolSortables.push(Sortable.create(group, {
-      group: { name: 'rank', pull: 'clone', put: false },
-      sort: false,
-      animation: 120,
-      ghostClass: 'sortable-ghost',
-      dragClass:  'sortable-drag',
-      filter:     '.ranked, .realm-label',
-      draggable:  '.pool-item:not(.ranked)',
-    }));
-  });
+  // On mobile (≤700px) skip pool Sortables entirely — tap-to-add handles it
+  if (window.innerWidth > 700) {
+    document.querySelectorAll('#pool-content .realm-group').forEach(group => {
+      poolSortables.push(Sortable.create(group, {
+        group: { name: 'rank', pull: 'clone', put: false },
+        sort: false,
+        animation: 120,
+        ghostClass: 'sortable-ghost',
+        dragClass:  'sortable-drag',
+        filter:     '.ranked, .realm-label',
+        draggable:  '.pool-item:not(.ranked)',
+      }));
+    });
+  }
 };
 </script>
