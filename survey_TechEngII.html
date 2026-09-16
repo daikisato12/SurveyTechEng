@@ -324,8 +324,13 @@ button { cursor: pointer; border: none; background: none; }
   flex: 1;
   text-align: right;
 }
-@media (max-width: 600px) {
+/* Desktop/mobile text toggle helpers */
+.mobile-only { display: none; }
+@media (max-width: 700px) {
   .s2-hint { display: none; }
+  .mobile-only { display: inline; }
+  .desktop-only { display: none; }
+  .pool-item .drag-hint { display: none; }
 }
 
 .s2-body {
@@ -1045,7 +1050,8 @@ label .bi-en {
     </div>
 
     <button class="btn-primary" id="btn-next" onclick="proceedToStep2()">
-      次へ — 教員希望順位の入力 → <span class="bi-en" style="display:inline;margin-left:6px;font-size:.82em;">Next: Instructor Ranking →</span>
+      <span class="desktop-only">次へ — 教員希望順位の入力 → <span class="bi-en" style="display:inline;margin-left:6px;font-size:.82em;">Next: Instructor Ranking →</span></span>
+      <span class="mobile-only">次へ →</span>
     </button>
 
     <div class="info-note">
@@ -1096,13 +1102,15 @@ label .bi-en {
       <div class="rank-head">
         <h3>希望順位（20名）<span class="bi-en" style="display:inline;margin-left:0;font-size:.78em;">/ Preference Ranking (20 required)</span></h3>
         <div class="count-badge" id="count-badge">0 / 20</div>
+        <div class="mobile-only" style="width:100%;font-size:11px;color:var(--text-3);margin-top:4px;">⠿ 長押しドラッグで順位を入れ替えできます / Long-press and drag to reorder</div>
       </div>
       <div class="rank-scroll">
         <div class="rank-empty" id="rank-empty">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
           </svg>
-          <p>左の候補リストから教員を<br>ドラッグまたはクリックして追加<br><span class="bi-en" style="display:inline;margin-left:0;">Drag or click instructors from the left list to add them</span></p>
+          <p class="desktop-only">左の候補リストから教員を<br>ドラッグまたはクリックして追加<br><span class="bi-en" style="display:inline;margin-left:0;">Drag or click instructors from the left list to add them</span></p>
+          <p class="mobile-only">「候補リスト」タブで教員をタップして追加<br><span class="bi-en" style="display:inline;margin-left:0;">Tap instructors in the "Candidates" tab to add them</span></p>
         </div>
         <div class="rank-list" id="rank-list"></div>
       </div>
@@ -1112,7 +1120,10 @@ label .bi-en {
   <!-- Submit bar -->
   <div class="submit-bar">
     <div class="submit-info" id="submit-info">教員を選択してください（20名必須）/ Please select 20 instructors (required)</div>
-    <button class="btn-submit" id="btn-submit" onclick="proceedToStep3()" disabled>次へ — 避けたい教員の選択 → <span class="bi-en" style="display:inline;margin-left:4px;font-size:.82em;">Next: Avoid Preferences →</span></button>
+    <button class="btn-submit" id="btn-submit" onclick="proceedToStep3()" disabled>
+      <span class="desktop-only">次へ — 避けたい教員の選択 → <span class="bi-en" style="display:inline;margin-left:4px;font-size:.82em;">Next: Avoid Preferences →</span></span>
+      <span class="mobile-only">次へ →</span>
+    </button>
   </div>
 </section>
 
@@ -1141,7 +1152,10 @@ label .bi-en {
 
   <div class="submit-bar">
     <div class="submit-info" id="avoid-info">選択しない場合はそのまま「確認画面へ」を押してください。/ If none, proceed to the confirmation screen.</div>
-    <button class="btn-submit" onclick="openConfirm()">確認画面へ / Review & Submit</button>
+    <button class="btn-submit" onclick="openConfirm()">
+      <span class="desktop-only">確認画面へ / Review &amp; Submit</span>
+      <span class="mobile-only">確認画面へ →</span>
+    </button>
   </div>
 </section>
 
