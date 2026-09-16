@@ -267,12 +267,30 @@ button { cursor: pointer; border: none; background: none; }
   color: var(--text-2);
   line-height: 1.7;
 }
+.warn-note {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: #FFF7ED;
+  border-radius: var(--r-sm);
+  border-left: 3px solid #D55E00;
+  font-size: 12px;
+  color: #7C3A00;
+  line-height: 1.7;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+.warn-note::before { content: '⚠️'; flex-shrink: 0; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .warn-note { background: #2a1500; color: #e8b87a; }
+}
+:root[data-theme="dark"] .warn-note { background: #2a1500; color: #e8b87a; }
 
 /* ─── Step 2 layout ──────────────────────────────────────── */
 #step2 {
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - 56px);
+  height: calc(100dvh - var(--header-h, 88px));
   overflow: hidden;
 }
 
@@ -284,6 +302,10 @@ button { cursor: pointer; border: none; background: none; }
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0;
+}
+/* step3 はスクロール可能なので toolbar を sticky にする */
+#step3 .s2-toolbar {
   position: sticky;
   top: var(--header-h, 0px);
   z-index: 90;
@@ -570,6 +592,14 @@ button { cursor: pointer; border: none; background: none; }
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-shrink: 0;
+}
+/* step3 はスクロール可能なので submit-bar を sticky にする */
+#step3 .submit-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 90;
+  box-shadow: 0 -2px 8px rgba(0,0,0,.07);
 }
 .submit-info {
   flex: 1;
@@ -927,6 +957,10 @@ label .bi-en {
       次のステップでは <strong>ちょうど20名</strong> の教員を希望順に選択してください。<br>
       <span class="bi-en" style="display:inline;margin-left:0;font-size:.95em;">Your email will be used solely for survey aggregation. In the next step, please rank exactly <strong>20</strong> instructors in order of preference.</span>
     </div>
+    <div class="warn-note">
+      ブラウザの更新ボタン（⌘R / F5）やページを閉じると、入力内容がすべてリセットされます。提出完了まで更新・タブを閉じないようにしてください。<br>
+      <span class="bi-en" style="display:inline;margin-left:0;">Refreshing or closing this page will reset all your selections. Please do not reload until you have submitted.</span>
+    </div>
   </div>
 </section>
 
@@ -993,6 +1027,8 @@ label .bi-en {
       <p>どうしても受講を避けたい教員がいればチェックしてください（複数選択可）。<br>
       選択した教員数が多いと、調整の結果受講できなくなる場合があります。その場合、来年度以降に履修することになり、結果として卒業が遅れることもあるので注意してください。</p>
       <p style="margin-top:8px;font-size:.85em;color:var(--text-sub);">Check hesitations if you have. Checking too many may result in no available instructors being assigned, which would require you to take the course in a later academic year and may delay your graduation.</p>
+      <p style="margin-top:10px;font-size:.85em;">⚠️ ブラウザの「戻る」ボタンを押すと希望順位の選択がリセットされます。前のステップに戻る場合は画面上の「← 戻る」ボタンをご利用ください。<br>
+      <span style="opacity:.85;">Please use the on-screen "← Back" button to return to the previous step. Pressing the browser's back button will reset your ranking.</span></p>
     </div>
   </div>
 
@@ -1017,7 +1053,7 @@ label .bi-en {
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-head">
       <h2 id="modal-title">内容を確認してください<span class="bi-en">Please Confirm Your Submission</span></h2>
-      <p>提出後の修正はできません。内容をご確認の上、「提出する」を押してください。<br><span class="bi-en" style="display:inline;margin-left:0;">Changes cannot be made after submission. Please review and press "Submit".</span></p>
+      <p>内容をご確認の上、「提出する」を押してください。間違いに気づいた場合は再度送信していただければ、最新の回答を使用します。<br><span class="bi-en" style="display:inline;margin-left:0;">Please review your selections and press "Submit". If you notice a mistake, simply resubmit — we will use your most recent response.</span></p>
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-foot">
@@ -1051,6 +1087,22 @@ function syncHeaderHeight() {
 }
 document.addEventListener('DOMContentLoaded', syncHeaderHeight);
 window.addEventListener('resize', syncHeaderHeight);
+
+/* ─── 誤操作防止: Step 2 以降で更新・離脱を確認 ───────────── */
+let _guardActive = false;
+function enableLeaveGuard()  {
+  _guardActive = true;
+  window.addEventListener('beforeunload', _onBeforeUnload);
+}
+function disableLeaveGuard() {
+  _guardActive = false;
+  window.removeEventListener('beforeunload', _onBeforeUnload);
+}
+function _onBeforeUnload(e) {
+  if (!_guardActive) return;
+  e.preventDefault();
+  e.returnValue = '';
+}
 
 /* ─── GAS 設定 ────────────────────────────────────────── */
 // Google Apps Script をデプロイして取得した URL を貼り付けてください
@@ -1107,7 +1159,7 @@ const INSTRUCTORS = [
   {id:33, realm:"動物発生・生理学グループ1", name:"石川　由希"},
   {id:34, realm:"動物発生・生理学グループ1", name:"島田　裕子"},
   {id:35, realm:"動物発生・生理学グループ2", name:"谷口　俊介"},
-  {id:36, realm:"動物発生・生理学グループ1", name:"上山 拓己"},
+  {id:36, realm:"動物発生・生理学グループ1", name:"上山　拓己"},
   {id:37, realm:"動物発生・生理学グループ1", name:"佐奈喜　祐哉"},
   {id:38, realm:"動物発生・生理学グループ1", name:"春本　敏之"},
   {id:39, realm:"動物発生・生理学グループ2", name:"千葉　親文"},
@@ -1142,7 +1194,7 @@ const INSTRUCTORS = [
   {id:68, realm:"応用生物化学・農林学", name:"谷本　啓司"},
   {id:69, realm:"応用生物化学・農林学", name:"熊野　匠人"},
   {id:70, realm:"応用生物化学・農林学", name:"松﨑　仁美"},
-  {id:71, realm:"応用生物化学・農林学", name:"向山 海凪"},
+  {id:71, realm:"応用生物化学・農林学", name:"向山　海凪"},
   {id:72, realm:"応用生物化学・農林学", name:"岡根　泉"},
   {id:73, realm:"応用生物化学・農林学", name:"藏滿　司夢"},
 ];
@@ -1201,7 +1253,8 @@ function proceedToStep2() {
   document.getElementById('step2').hidden = false;
   document.getElementById('step-pill').textContent = 'Step 2 / 3';
   document.getElementById('student-tag').innerHTML =
-    `<strong>${name}</strong>（${sid} · ${email}）`;
+    `<strong>${name}</strong>（${email}）`;
+  enableLeaveGuard();   // 更新・離脱ガードを有効化
   initStep2();
 }
 
@@ -1544,7 +1597,6 @@ function openConfirm() {
 
   let html = `<div class="confirm-info">
     <span class="ci-label">氏名 / Name</span><span class="ci-val">${studentInfo.name}</span>
-    <span class="ci-label">学籍番号 / Student ID</span><span class="ci-val">${studentInfo.sid}</span>
     <span class="ci-label">メール / Email</span><span class="ci-val">${studentInfo.email}</span>
   </div>
   <div class="confirm-list-head">希望順位（${rankedIds.length}名）/ Preference Ranking (${rankedIds.length})</div>
@@ -1707,6 +1759,7 @@ function submitViaHiddenForm(payload) {
 }
 
 function onSubmitSuccess(payload) {
+  disableLeaveGuard();  // 送信完了 → 離脱ガードを解除
   document.getElementById('submitting-overlay').hidden = true;
   document.getElementById('step3').hidden = true;
   document.getElementById('step-pill').textContent = '完了 / Done';
@@ -1714,7 +1767,6 @@ function onSubmitSuccess(payload) {
   // 成功画面のコンテンツを構築
   let html = `<div class="confirm-info" style="margin-bottom:12px;">
     <span class="ci-label">氏名 / Name</span><span class="ci-val">${payload.name}</span>
-    <span class="ci-label">学籍番号 / Student ID</span><span class="ci-val">${payload.sid}</span>
     <span class="ci-label">メール / Email</span><span class="ci-val">${payload.email}</span>
   </div>
   <div class="confirm-list-head">希望順位（${payload.ranking.length}名）/ Preference Ranking (${payload.ranking.length})</div>
