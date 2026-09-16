@@ -1128,7 +1128,7 @@ label .bi-en {
         <h3>候補教員リスト <span class="bi-en" style="display:inline;margin-left:0;font-size:.8em;">/ Instructor List</span> <span style="font-weight:400;font-size:12px;color:var(--text-3)" id="pool-count-label"></span></h3>
         <input type="search" class="search-box" id="pool-search" placeholder="教員名で検索… / Search by name…" oninput="onSearch(this.value)">
         <button class="rf-toggle" id="rf-toggle" onclick="toggleFilters()">
-          <span id="rf-toggle-label">分野 · すべて / All ▾</span>
+          <span id="rf-toggle-label">分野：すべて / All ▾</span>
         </button>
         <div class="realm-filters" id="realm-filters"></div>
       </div>
@@ -1557,7 +1557,7 @@ function updateToggleBtn(forceOpen) {
     lbl.textContent = '▲ 閉じる / Close';
   } else {
     const name = isFiltered ? currentFilter : 'すべて / All';
-    lbl.textContent = '分野 · ' + name + ' ▾';
+    lbl.textContent = '分野：' + name + ' ▾';
   }
   btn.classList.toggle('filter-active', isFiltered);
 }
