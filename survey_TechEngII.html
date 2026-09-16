@@ -1777,7 +1777,7 @@ async function submitSurvey() {
 
   // ── フラットな JSON ペイロードを構築（Azure Logic Apps → Excel 用）──
   const flat = {
-    submitted_at: new Date().toISOString(),
+    submitted_at: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 19).replace('T', ' '), // JST (UTC+9)
     name:         studentInfo.name,
     student_id:   studentInfo.sid,
     email:        studentInfo.email,
