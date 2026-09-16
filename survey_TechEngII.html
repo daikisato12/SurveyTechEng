@@ -284,6 +284,10 @@ button { cursor: pointer; border: none; background: none; }
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  position: sticky;
+  top: var(--header-h, 0px);
+  z-index: 90;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
 }
 .student-tag {
   font-size: 12px;
@@ -1040,6 +1044,14 @@ label .bi-en {
 </section>
 
 <script>
+/* ─── Header height → CSS var (for sticky toolbar) ───── */
+function syncHeaderHeight() {
+  const h = document.querySelector('.site-header');
+  if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+}
+document.addEventListener('DOMContentLoaded', syncHeaderHeight);
+window.addEventListener('resize', syncHeaderHeight);
+
 /* ─── GAS 設定 ────────────────────────────────────────── */
 // Google Apps Script をデプロイして取得した URL を貼り付けてください
 // 例: 'https://script.google.com/macros/s/AKfyc.../exec'
